@@ -8,23 +8,46 @@
 		Tab, 
 		TabAnchor,
 		ConicGradient,
-		ProgressBar } from '@skeletonlabs/skeleton'
+		ProgressBar,
+		type ModalComponent, 
+		getToastStore} from '@skeletonlabs/skeleton'
 	
-	import type { ConicStop } from '@skeletonlabs/skeleton';
-
+	import type { ConicStop, ModalSettings, ToastSettings } from '@skeletonlabs/skeleton';
+	import moment from "moment"
 	let tabSet: number = 0;
 
-
+	
 	import Icon from 'svelte-icons-pack';
 	import FaSolidPiggyBank from "svelte-icons-pack/fa/FaSolidPiggyBank"
 	import AiOutlineStock from "svelte-icons-pack/ai/AiOutlineStock";
 	import FaSolidChartPie from "svelte-icons-pack/fa/FaSolidChartPie";
 	import AiOutlineTable from "svelte-icons-pack/ai/AiOutlineTable";
 
-	import { writable } from "svelte/store";
+	import { getModalStore } from '@skeletonlabs/skeleton';
+				
+	const modalStore = getModalStore();
 
-	const expenses = writable(0)
+	import addAssetM from '../Components/addAsset.svelte';
+	import addGoalM from '../Components/addGoal.svelte';
 
+	const modalComponentRegistry: Record<string, ModalComponent> = {
+		addAssets: { ref: addAssetM },
+		addGoals: { ref: addGoalM },
+	};
+	const addAssetModal: ModalSettings = {
+			type: 'component',
+			component: modalComponentRegistry['addAssets']
+		}
+	const addAsset = () => {
+		modalStore.trigger(addAssetModal)
+	}
+	const addGoalModal: ModalSettings = {
+			type: 'component',
+			component: modalComponentRegistry['addGoals']
+		}
+	const addGoal = () => {
+		modalStore.trigger(addGoalModal)
+	}	
 	const currency = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'USD'
@@ -35,35 +58,165 @@
 		minimumFractionDigits: 2,
   		maximumFractionDigits: 2
 	});
-
-
-	const conicStops: ConicStop[] = [
+	let conicStops: ConicStop[] = [
 		{ label: 'Assets', color: 'rgba(255,255,255,.78)', start: 0, end: 80 },
 		{ label: 'Expenses', color: 'rgba(255,255,255,0.1)', start: 80, end: 100 }
 	];
-
-	var tableAssets = [
-		{ position: 1, name: 'Savings Bank Account', amount:  20000 },
-		{ position: 2, name: 'Cash', amount: 0 },
-		{ position: 3, name: 'Gold (Ounce Troy)', amount: .13 },
-		{ position: 4, name: 'Silver (Ounce Troy)', amount: 24 }
-	]
 	//ONCE THIS IS BEING CREATED, THERE SHOULD BE A FUNCTION THAT TIES THE POSITION OR ID TO TIE THE ASSET AMOUNT TO THE GOAL
-	var tableAssetGoals = [ 
-		{ position: 1, name: 'Savings Bank Account', amount:  50000, amountSaved: tableAssets[0].amount, type: "Dollar"},
-		{ position: 2, name: 'Cash', amount: 10000, amountSaved: tableAssets[1].amount, type: "Dollar"},
-		{ position: 3, name: 'Gold (Ounce Troy)', amount: 2, amountSaved: tableAssets[2].amount, type: "Quantity"},
-		{ position: 4, name: 'Silver (Ounce Troy)', amount: 200, amountSaved:  tableAssets[3].amount, type: "Quantity"}
-	]
-			
-	function mySelectionHandler(meta){
-		console.log(meta.detail)
-	}
+	/* 
+	{ position: 1, name: 'Savings Bank Account', amount:  20000 , type: "Dollar"},
+	{ position: 2, name: 'Cash', amount: 0 , type: "Dollar"},
+	{ position: 3, name: 'Gold (Ounce Troy)', amount: .13 , type: "Quanitity"},
+	{ position: 4, name: 'Silver (Ounce Troy)', amount: 24 , type: "Quanitity"}
+	*/
+	
+	import data from "../user.json";
+	import { browser } from '$app/environment';
+	import { fly, slide } from 'svelte/transition';
+	import { quintIn } from 'svelte/easing';
+	let tableAssets = ([])
+	let tableAssetGoals = ([])
+	let tablePay = ([])
+	let tableExpenses = ([])
+	let totalExpensesAMonth = 0.0, totalExpensesStowedPerPC 
 
-	function renderTimeLeft(daTing){
-		console.log()
-		
-		//this should return Tooltip x days
+	data[0]["tableAssets"].forEach((element, index) => {
+		tableAssets.push(element)
+		if(element["goalFlag"]){
+			tableAssetGoals.push(element)
+		}
+	});
+	data[1]["tableGoalsMisc"].forEach((element, index) => { 
+		if(typeof element["amount"] === "string"){
+			element["amount"] = tableAssets[element.position].amount 
+		}
+		tableAssetGoals.push(element)
+	});
+	data[2]["income"].forEach((element, index) => { 
+		tablePay.push(element)
+	});
+	data[3]["expenses"].forEach((element, index) => { 
+		tableExpenses.push(element)
+		totalExpensesAMonth += element.Cost
+	});
+	/* this works, just implement that for functions like add asset but to make hard changes in the json figure that out
+	 function saveDraft(){
+		if(browser){
+			localStorage.setItem("tableAssets", JSON.stringify(tableAssets))
+		}
+    }
+    saveDraft()
+	if(browser){
+		console.log(JSON.parse(localStorage.getItem("tableAssets")))
+	} */
+	const toastStore = getToastStore()
+	async function renderTimeLeft(daTing){
+		let freq:number, addtionType:string;
+		var goalAcheived: boolean = false;
+		var curAmt = daTing[0];
+		var goalAmt = daTing[1];
+		var whatsLeft = goalAmt - curAmt;
+		var motherPercentage, daughterPercentage;
+		if(whatsLeft <= 0){
+			goalAcheived = true
+		}
+		if( goalAcheived === false ){
+			tableAssets.forEach((element, index) => {
+				if(tableAssets[index].name === daTing[2]){
+					if(tableAssets[index].NW === "Need"){
+						motherPercentage = .8
+						daughterPercentage = tableAssetGoals[index].PercentageOfSavingStowed
+					} else {
+						motherPercentage = .2
+						daughterPercentage = 1
+					}
+				}
+			});
+			tableAssetGoals.forEach((element, index) => {
+				if(tableAssetGoals[index].name === daTing[2]){
+					if(tableAssetGoals[index].NW === "Need"){
+						motherPercentage = .8
+						daughterPercentage = tableAssetGoals[index].PercentageOfSavingStowed
+					}else {
+						motherPercentage = .2
+						daughterPercentage = 1
+					}
+				}
+			});
+			switch(tablePay[0].frequency){
+				case("daily"):
+					break;
+				case("weekly"):
+					
+					break;
+				case("bi"):
+					freq = 2 // in a month
+					addtionType = "weeks"
+					break;
+				case("monthly"):
+					break;
+				case("x"): //you would store the amount of months you would wait for payment for your services
+					break;
+			
+			}
+			console.log(totalExpensesAMonth)
+			totalExpensesStowedPerPC = Math.ceil(totalExpensesAMonth / freq)
+			var earnedIn1PP = ((tablePay[0].pay * tablePay[0].projectedHours * freq) - totalExpensesStowedPerPC) * ( motherPercentage * daughterPercentage) //.8 is the savings amount from paycheck put towards goals
+			var numOfPayChecks
+			if( daTing[2] == "Gold (Ounce Troy)" ){
+				const response = fetch(tableAssets[2].link).then(res => res.json())
+				.then(data => {
+						numOfPayChecks = Math.ceil((data["items"][0].xauPrice * whatsLeft) / earnedIn1PP)
+						var stringy = "You won\'t have to buy any more" + " " +
+							moment().add(numOfPayChecks * freq, addtionType).fromNow() + " (" +
+							moment().add(numOfPayChecks * freq, addtionType).calendar() + ") ≈" +
+							numOfPayChecks + " paychecks" +
+							" based on the price ($"+ data["items"][0].xauPrice +"/ozt) as of " + data["date"];
+						const toasty: ToastSettings = {
+							message: stringy,
+							background: 'variant-filled-success',
+							autohide: false,
+							classes: "text-center"
+						}
+						toastStore.trigger(toasty)
+
+					});
+				/* await response.then((res)=>{.24 change truck once emergency food is complete, new should be .8*.3*(whatever percentage you deem fit for the rest)
+					console.log(res)
+				}) */
+			} else if (daTing[2] == "Silver (Ounce Troy)"){
+				const response = fetch(tableAssets[2].link).then(res => res.json())
+				.then(data => {
+						numOfPayChecks = Math.ceil((data["items"][0].xagPrice * whatsLeft) / earnedIn1PP)
+						var stringy = "You won\'t have to buy any more" + " " +
+							moment().add(numOfPayChecks * freq, addtionType).fromNow() + " (" +
+							moment().add(numOfPayChecks * freq, addtionType).calendar() + ") ≈" +
+							numOfPayChecks + " paychecks" +
+							" based on the price ($"+ data["items"][0].xagPrice +"/ozt) as of " + data["date"];
+						const toasty: ToastSettings = {
+							message: stringy,
+							background: 'variant-filled-success',
+							autohide: false,
+							classes: "text-center"
+						}
+						toastStore.trigger(toasty)
+					});
+			} else {
+				var numOfPayChecks = Math.ceil( goalAmt / earnedIn1PP )
+				var done = numOfPayChecks * freq //express in days, weeks, months, etc *may have to make special case for x months
+				var stringy = "You won\'t have to save any more " +
+								moment().add(done, addtionType).fromNow() + " (" +
+								moment().add(done, addtionType).calendar() + ") ≈" +
+								numOfPayChecks + " paychecks";
+				const toasty: ToastSettings = {
+					message: stringy,
+					background: 'variant-filled-success',
+					autohide: false,
+					classes: "text-center"
+				}
+				toastStore.trigger(toasty)
+			}
+		}
 	}
 
 </script>
@@ -85,11 +238,32 @@
 				<!-- Tab Panels --->
 				<svelte:fragment slot="panel">
 					{#if tabSet === 0}
-						<ConicGradient stops={conicStops} legend width="xs:w-3/4 md:w-1/4"> Totals </ConicGradient>
+						<div in:fly={{easing:quintIn}} out:slide>
+							<ConicGradient stops={conicStops} legend width="xs:w-3/4 md:w-1/2"> Totals </ConicGradient><!-- so in theory there should be reactive if statement that will change the conic gradient (in a cool animation) that will show the information you want -->
+						</div>
 					{:else if tabSet === 1}
-						(tab panel 2 contents)
+						Put da chart a da ting a da bing a ling
 					{:else if tabSet === 2}
-						(tab panel 3 contents)
+						<div class="table-container" in:fly={{easing:quintIn}} out:slide>
+							<!-- Native Table Element -->
+							<table class="table table-interactive text-center">
+								<thead>
+									<tr >
+										<th class="text-center">Time Frame</th>
+										<th class="text-center">Base</th>
+										<th class="text-center">Bills</th>
+										<th class="text-center">Take Home</th>
+										<th class="text-center">Savings (80%)</th>
+										<th class="text-center">Spendings (10%)</th>
+										<th class="text-center">STONKS (10%)</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>
 					{/if}
 				</svelte:fragment>
 			</TabGroup>
@@ -118,14 +292,19 @@
 									{#each tableAssets as row}
 										<tr>
 											<td>{row.name}</td>
-											<td>{currency.format(row.amount)}</td>
+											{#if row.type === "Dollar"}
+												<td>{currency.format(row.amount)}</td>
+											{:else}
+												<td>{row.amount}</td>
+											
+											{/if}
 										</tr>
 									{/each}
 								</tbody>
 								<tfoot>
 									<tr >
 										<td class="text-center" colspan="2">
-											<button class="btn variant-filled rounded-full">
+											<button class="btn variant-filled rounded-full" on:click={() => addAsset()}>
 												Add Asset &nbsp; <strong class='text-[26px]'> + </strong> 
 											</button>
 										</td>
@@ -142,18 +321,18 @@
 									<thead>
 										<tr >
 											<th class="text-center">Goals</th>
-											<th class="text-center">Goal Amount</th>
+											<th class="text-center">Progress 🚀</th>
 										</tr>
 									</thead>
 									<tbody>
 										{#each tableAssetGoals as row}
 											<tr>
 												<td>{row.name}</td>
-													<td on:mouseenter={() => renderTimeLeft(this)}>
+													<td on:click={() => renderTimeLeft([row.amount, row.goal, row.name])} id={row.name + " Goal"}>
 														{#if row.type === "Dollar"}
-															{currency.format(row.amountSaved)} / {currency.format(row.amount)} ( { percent.format(row.amountSaved / row.amount) } )<ProgressBar label="Progress Bar" value={row.amountSaved} max={row.amount} />
+															{currency.format(row.amount)} / {currency.format(row.goal)} ( { percent.format(row.amount / row.goal) } )<ProgressBar label="Progress Bar" value={row.amount} max={row.goal} />
 														{:else}
-															{row.amountSaved} / {row.amount} ( { percent.format(row.amountSaved / row.amount) } ) <ProgressBar label="Progress Bar" value={row.amountSaved} max={row.amount} />
+															{row.amount} / {row.goal} ( { percent.format(row.amount / row.goal) } ) <ProgressBar label="Progress Bar" value={row.amount} max={row.goal} />
 														{/if}
 													</td>
 												</tr>
@@ -162,7 +341,7 @@
 									<tfoot>
 										<tr >
 											<td class="text-center" colspan="2">
-												<button class="btn variant-filled rounded-full">
+												<button class="btn variant-filled rounded-full" on:click={() => addGoal()}>
 													Add Goal &nbsp; <strong class='text-[26px]'> + </strong> 
 												</button>
 											</td>

@@ -38,6 +38,9 @@
   },
   "type": "module",
   "dependencies": {
+    "@floating-ui/dom": "^1.5.3",
+    "fs-extra": "^11.1.1",
+    "moment": "^2.29.4",
     "svelte-icons-pack": "^2.1.0"
   }
 }
