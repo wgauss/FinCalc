@@ -1,4 +1,13 @@
 <script lang="ts">
+	/*
+	TODO:
+		update the code to take into consideration of ["income"].frequency
+		link all the variables for the pi graph
+		figure out d3 for svelte
+		finish the table./OG look
+	
+	
+	*/
 	import { 
 		Accordion, 
 		AccordionItem, 
@@ -71,14 +80,15 @@
 	*/
 	
 	import data from "../user.json";
-	import { browser } from '$app/environment';
+//	import data from "../mom.json"; //2250
+
 	import { fly, slide } from 'svelte/transition';
 	import { quintIn } from 'svelte/easing';
 	let tableAssets = ([])
 	let tableAssetGoals = ([])
 	let tablePay = ([])
 	let tableExpenses = ([])
-	let totalExpensesAMonth = 0.0, totalExpensesStowedPerPC 
+	let totalExpensesAMonth = 0.0, totalExpensesStowedPerPC, totalIncomeMonthly = 0.0
 
 	data[0]["tableAssets"].forEach((element, index) => {
 		tableAssets.push(element)
@@ -159,8 +169,9 @@
 					break;
 			
 			}
-			console.log(totalExpensesAMonth)
 			totalExpensesStowedPerPC = Math.ceil(totalExpensesAMonth / freq)
+			totalIncomeMonthly = (tablePay[0].pay * tablePay[0].projectedHours * freq * freq)
+			console.log(totalIncomeMonthly)
 			var earnedIn1PP = ((tablePay[0].pay * tablePay[0].projectedHours * freq) - totalExpensesStowedPerPC) * ( motherPercentage * daughterPercentage) //.8 is the savings amount from paycheck put towards goals
 			var numOfPayChecks
 			if( daTing[2] == "Gold (Ounce Troy)" ){
@@ -174,6 +185,12 @@
 							" based on the price ($"+ data["items"][0].xauPrice +"/ozt) as of " + data["date"];
 						const toasty: ToastSettings = {
 							message: stringy,
+							action: {
+								label: "View Chart",
+								response: ()=>{
+									window.open("https://goldprice.org/spot-gold.html", "_blank")
+								}
+							},
 							background: 'variant-filled-success',
 							autohide: false,
 							classes: "text-center"
@@ -195,6 +212,12 @@
 							" based on the price ($"+ data["items"][0].xagPrice +"/ozt) as of " + data["date"];
 						const toasty: ToastSettings = {
 							message: stringy,
+							action: {
+								label: "View Chart",
+								response: ()=>{
+									window.open("https://goldprice.org/silver-price.html", "_blank")
+								}
+							},
 							background: 'variant-filled-success',
 							autohide: false,
 							classes: "text-center"
@@ -204,10 +227,16 @@
 			} else {
 				var numOfPayChecks = Math.ceil( goalAmt / earnedIn1PP )
 				var done = numOfPayChecks * freq //express in days, weeks, months, etc *may have to make special case for x months
+				tableAssetGoals.forEach(element => {
+					if(element.name === daTing[2]){
+						console.log(element)
+					}
+				});
 				var stringy = "You won\'t have to save any more " +
 								moment().add(done, addtionType).fromNow() + " (" +
 								moment().add(done, addtionType).calendar() + ") ≈" +
-								numOfPayChecks + " paychecks";
+								numOfPayChecks + " paychecks, taking out: $" +
+								Math.ceil(earnedIn1PP) + " per paycheck for the " + daTing[2];
 				const toasty: ToastSettings = {
 					message: stringy,
 					background: 'variant-filled-success',
@@ -256,11 +285,10 @@
 										<th class="text-center">Savings (80%)</th>
 										<th class="text-center">Spendings (10%)</th>
 										<th class="text-center">STONKS (10%)</th>
-
 									</tr>
 								</thead>
 								<tbody>
-									
+								
 								</tbody>
 							</table>
 						</div>
@@ -275,7 +303,7 @@
 				<Accordion>
 					<AccordionItem open>
 						<svelte:fragment slot="lead"> <Icon src={FaSolidPiggyBank} color="white" size="32px"/> </svelte:fragment>
-						<svelte:fragment slot="summary">Assets | Total: </svelte:fragment>
+						<svelte:fragment slot="summary">Assets | Total: { totalIncomeMonthly } </svelte:fragment>
 						<svelte:fragment slot="content">
 
 						<!-- Responsive Container (recommended) -->
@@ -320,7 +348,7 @@
 								<table class="table table-interactive text-center">
 									<thead>
 										<tr >
-											<th class="text-center">Goals</th>
+											<th class="text-center">Goals</th> <!-- idea: on click for the title, show the history just for that, or if tabset on pie, show how much out of assets it takes -->
 											<th class="text-center">Progress 🚀</th>
 										</tr>
 									</thead>
@@ -355,10 +383,29 @@
 					</AccordionItem>
 					<AccordionItem>
 						<svelte:fragment slot="lead"><p class="text-[32px]">📉</p></svelte:fragment>
-						<svelte:fragment slot="summary">Expenses | Total: </svelte:fragment>
+						<svelte:fragment slot="summary">Expenses | Total: {currency.format(totalExpensesAMonth)}</svelte:fragment>
 						<svelte:fragment slot="content">
-							<div class="bg-slate-800 rounded p-2 text-center">
-								do work
+							<p class="text-center">{currency.format(Math.ceil(totalExpensesAMonth / 2))} should be taken out per paycheck</p>
+							<div class="table-container" in:fly={{easing:quintIn}} out:slide>
+								<!-- Native Table Element -->
+								<table class="table table-interactive text-center">
+									<thead>
+										<tr >
+											<th class="text-center">Name</th>
+											<th class="text-center">Cost</th>
+											<th class="text-center">Frequency</th>
+										</tr>
+									</thead>
+									<tbody><!-- GAS MATH 300 miles of range / 25 miles every weekday, x resivoir, $4/gallon -->
+										{#each tableExpenses as row}
+											<tr>
+												<td>{row.Name}</td>
+												<td>{currency.format(row.Cost)}</td>
+												<td>{row.frequency}</td>
+											</tr>
+										{/each}
+									</tbody>
+								</table>
 							</div>
 						</svelte:fragment>
 					</AccordionItem>

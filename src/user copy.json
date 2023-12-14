@@ -1,0 +1,176 @@
+[
+	
+	{
+		"tableAssets": [
+			{
+				"position": 1,
+				"name": "Bank Account",
+				"amount": 40,
+				"type": "Dollar",
+				"goalFlag": true,
+				"goal": 50000,
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.028
+			},
+			{
+				"position": 2,
+				"name": "Cash",
+				"amount": 145,
+				"type": "Dollar",
+				"goalFlag": true,
+				"goal": 10000,
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.252
+			},
+			{
+				"position": 3,
+				"name": "Gold (Ounce Troy)",
+				"amount": 0.2,
+				"type": "Quanitity",
+				"goalFlag": true,
+				"goal": 2,
+				"link" : "https://data-asg.goldprice.org/dbXRates/USD",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.14
+			},
+			{
+				"position": 4,
+				"name": "Silver (Ounce Troy)",
+				"amount": 25,
+				"type": "Quanitity",
+				"goalFlag": true,
+				"goal": 200,
+				"link": "https://data-asg.goldprice.org/GetData/USD-XAG/1",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.14
+			}
+		]
+	},
+	{
+		"tableGoalsMisc" : [
+			{
+				"position": 1,
+				"name": "Truck",
+				"amount" : "Cash",
+				"goal": 6000,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.5
+			},
+			{
+				"position": 1,
+				"name": "Emergency Food ⚕️",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "Thermal Cam",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.072
+			},
+			{
+				"position": 1,
+				"name": "CZ 97B ",
+				"amount" : 0,
+				"goal": 1000,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.072
+			},
+			{
+				"position": 1,
+				"name": "IPad Pro w/ Apple Pen",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Want"
+			},
+			{
+				"position": 1,
+				"name": "Small Form Factor PSU 650",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Want"
+			},
+			{
+				"position": 1,
+				"name": "Chair",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Want"
+			}
+		]
+	},
+	{
+		"income" : [
+			{
+				"frequency" : "bi",
+				"payType" : "hourly",
+				"pay" : 14.7,
+				"projectedHours": 40,
+				"takeHome" : [
+					{
+						"date" : "November 1st, 2023",
+						"amount" : 200,
+						"hours" : 40
+					}
+				] 
+			}
+		]
+	},
+	{
+		"expenses":[
+			{
+				"frequency": "Monthly",
+				"Name" : "Rent",
+				"Cost" : 200
+			},
+			{
+				"frequency": "Monthly",
+				"Name" : "School",
+				"Cost" : 0
+			},
+			{
+				"frequency":"Monthly",
+				"Name" : "Food",
+				"Cost" : 0
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Internet",
+				"Cost" : 20
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Phone",
+				"Cost" : 15
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Gas",
+				"Cost" : 150
+			}
+		]
+	},
+	{
+		"fitness" : {
+			"Date" : "The Date",
+			"Reps" : {
+				"Biceps" : {
+					"Name" :"Curls" ,
+					"Reps" : 8,
+					"Sets" : 3
+				}
+			}
+		}
+	}
+]

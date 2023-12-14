@@ -5,7 +5,7 @@
 			{
 				"position": 1,
 				"name": "Bank Account",
-				"amount": 40,
+				"amount": 1,
 				"type": "Dollar",
 				"goalFlag": true,
 				"goal": 50000,
@@ -15,7 +15,7 @@
 			{
 				"position": 2,
 				"name": "Cash",
-				"amount": 20,
+				"amount": 15,
 				"type": "Dollar",
 				"goalFlag": true,
 				"goal": 10000,
@@ -25,10 +25,10 @@
 			{
 				"position": 3,
 				"name": "Gold (Ounce Troy)",
-				"amount": 0.26,
+				"amount": 0.2,
 				"type": "Quanitity",
 				"goalFlag": true,
-				"goal": 2,
+				"goal": 22,
 				"link" : "https://data-asg.goldprice.org/dbXRates/USD",
 				"NW" : "Need",
 				"PercentageOfSavingStowed" : 0.14
@@ -39,7 +39,7 @@
 				"amount": 25,
 				"type": "Quanitity",
 				"goalFlag": true,
-				"goal": 200,
+				"goal": 352,
 				"link": "https://data-asg.goldprice.org/GetData/USD-XAG/1",
 				"NW" : "Need",
 				"PercentageOfSavingStowed" : 0.14
@@ -51,20 +51,84 @@
 			{
 				"position": 1,
 				"name": "Truck",
-				"amount" : "Cash",
-				"goal": 6000,
+				"links": [
+						"https://lasalle.craigslist.org/search/cta?auto_bodytype=7&auto_bodytype=9&auto_cylinders=4&auto_cylinders=5&auto_fuel_type=1&auto_transmission=1&auto_transmission=2&max_auto_miles=100000&max_price=12000&min_price=6000&postal=60505&query=ranger&search_distance=200#search=1~gallery~0~0",
+						"https://www.facebook.com/marketplace/103724136333224/vehicles?minPrice=6000&maxPrice=9500&maxMileage=100000&make=2318041991806363&model=269079742149646&exact=false",
+						"https://www.facebook.com/marketplace/103724136333224/vehicles?minPrice=5000&maxPrice=9500&maxMileage=100000&maxYear=2011&make=297354680962030&model=955669935885517&exact=false",
+						"https://www.rockauto.com/en/catalog/ford,2006,ranger,3.0l+v6"
+						],
+				"comments": "Sport version is 6cylinder, at around 4-500 miles to get to TN: (assuming ~24mpg) 400 miles for a single tank (17gal cap) about 1.5 fillups",
+				"amount" : 600,
+				"goal": 9000,
 				"type" : "Dollar",
 				"NW" : "Need",
-				"PercentageOfSavingStowed" : 0.168
+				"PercentageOfSavingStowed" : 0.75
 			},
 			{
 				"position": 1,
 				"name": "Emergency Food ⚕️",
+				"link": "https://www.healthrangerstore.com/collections/emergency-survival-foods/products/459-servings-ranger-bucket-set-organic-emergency-storable-food-supply",
 				"amount" : 0,
 				"goal": 400,
 				"type" : "Dollar",
 				"NW" : "Need",
-				"PercentageOfSavingStowed" : 0.072
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "Crye JPC 2.0",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "Fjalraven Pants 32 waist 34 length",
+				"link": "https://www.fjallraven.com/us/en-us/men/trousers/trekking-trousers/vidda-pro-trousers-m",
+				"amount" : 0,
+				"goal": 200,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "Camping Equipment",
+				"amount" : 0,
+				"goal": 100,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "LVL IV Plates",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "Aqua Pail 1100 gal",
+				"link":"https://www.healthrangerstore.com/collections/emergency-survival-foods/products/aquapail-water-filter?variant=40570580631625",
+				"amount" : 0,
+				"goal": 400,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
+			},
+			{
+				"position": 1,
+				"name": "3 Months Rent TN",
+				"amount" : 0,
+				"goal": 862.5,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.25
 			},
 			{
 				"position": 1,
@@ -77,6 +141,25 @@
 			},
 			{
 				"position": 1,
+				"name": "CZ 97B ",
+				"amount" : 0,
+				"goal": 1000,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.072
+			},
+			{ 
+				"position": 1,
+				"name": "SiOnyx Aurora",
+				"link": "https://www.opticsplanet.com/sionyx-aurora-night-vision-monocular-tmrhv.html",
+				"amount" : 0,
+				"goal": 1000,
+				"type" : "Dollar",
+				"NW" : "Need",
+				"PercentageOfSavingStowed" : 0.75
+			},
+			{
+				"position": 1,
 				"name": "IPad Pro w/ Apple Pen",
 				"amount" : 0,
 				"goal": 400,
@@ -85,9 +168,10 @@
 			},
 			{
 				"position": 1,
-				"name": "Small Form Factor PSU 650",
+				"name": "Small Form Factor PSU 750W",
+				"link": "https://www.microcenter.com/search/search_results.aspx?Ntk=all&sortby=match&N=4294966654+4294816992+4294804934+385&myStore=true",
 				"amount" : 0,
-				"goal": 400,
+				"goal": 200,
 				"type" : "Dollar",
 				"NW" : "Want"
 			},
@@ -106,7 +190,7 @@
 			{
 				"frequency" : "bi",
 				"payType" : "hourly",
-				"pay" : 19,
+				"pay" : 16.33,
 				"projectedHours": 40,
 				"takeHome" : [
 					{
@@ -121,18 +205,13 @@
 	{
 		"expenses":[
 			{
-				"frequency" : "Monthly",
-				"Name" : "Phone",
-				"Cost" : 15
+				"frequency": "Monthly",
+				"Name" : "Rent",
+				"Cost" : 250
 			},
 			{
-				"frequency" : "Monthly",
-				"Name" : "Internet",
-				"Cost" : 20
-			},
-			{
-				"frequency" : "Monthly",
-				"Name" : "GAS 300 miles of range / 25 miles every weekday",
+				"frequency": "Monthly",
+				"Name" : "School",
 				"Cost" : 0
 			},
 			{
@@ -141,10 +220,48 @@
 				"Cost" : 150
 			},
 			{
-				"frequency": "Monthly",
-				"Name" : "Rent",
-				"Cost" : 400
+				"frequency":"Monthly",
+				"Name" : "Vitamins",
+				"Cost" : 30
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Internet",
+				"Cost" : 20
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Phone",
+				"Cost" : 15
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Gas",
+				"Cost" : 150
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Toiletries *(3 Mo)",
+				"list": ["Toothbrush", "Toothpaste" ,"Luffa", "Facewash", "Body Wash"],
+				"Cost" : 0
+			},
+			{
+				"frequency" : "Monthly",
+				"Name" : "Hosting/Domain",
+				"Cost" : 10
 			}
 		]
+	},
+	{
+		"fitness" : {
+			"Date" : "The Date",
+			"Reps" : {
+				"Biceps" : {
+					"Name" :"Curls" ,
+					"Reps" : 8,
+					"Sets" : 3
+				}
+			}
+		}
 	}
 ]
